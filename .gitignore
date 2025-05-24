@@ -1,5 +1,5 @@
 node_modules/
-*.ts
+src/
 .env
 tsconfig.json
 tsconfig.tsbuildinfo
