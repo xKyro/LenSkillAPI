@@ -51,7 +51,7 @@ function fetchActivities(courseId) {
 }
 function fetchActivity(activityId, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield Database_1.default.query(`select * from activities where activity_id = $1`, [activityId]);
+        const result = yield Database_1.default.query(`select a.*, (select count(*) from submissions s where s.activity_id = a.activity_id) as submission_count from activities a where a.activity_id = $1`, [activityId]);
         if (!result.rows[0])
             return null;
         const data = result.rows[0];
@@ -61,6 +61,7 @@ function fetchActivity(activityId, options) {
             description: data.description,
             created_at: (0, DateFormatter_1.formatToLocale)(data.created_at),
             deadline: (0, DateFormatter_1.formatToLocale)(data.deadline),
+            submissions: parseInt(data.submission_count)
         };
         if (options === null || options === void 0 ? void 0 : options.getCourse) {
             const course = yield (0, CoursesQueries_1.fetchCourse)(data.course_id);
