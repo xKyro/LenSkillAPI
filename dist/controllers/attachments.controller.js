@@ -28,7 +28,6 @@ const CourseAttachment_1 = __importDefault(require("../schemas/CourseAttachment"
 const Attachments_1 = require("../tools/Attachments");
 const CourseAttachmentsQueries_1 = require("../sql/CourseAttachmentsQueries");
 const constants_1 = require("../constants");
-const AttachmentCache_1 = require("../cache/AttachmentCache");
 const ActivityAttachment_1 = __importDefault(require("../schemas/ActivityAttachment"));
 const ActivitiesQueries_1 = require("../sql/ActivitiesQueries");
 const dotenv_1 = require("dotenv");
@@ -85,7 +84,7 @@ function getCourseAttachment(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { attachmentId } = request.params;
-            const attachmentOnCache = (0, AttachmentCache_1.getAttachmentCache)(attachmentId);
+            const attachmentOnCache = constants_1.CACHE.get(attachmentId);
             if (attachmentOnCache) {
                 response.setHeader("Content-Type", attachmentOnCache.mimetype);
                 response.setHeader('Content-Disposition', `inline; filename="${attachmentOnCache.name}"`);
@@ -99,7 +98,7 @@ function getCourseAttachment(request, response) {
                     return response.status(410).send({ message: `Attachment not found.` });
                 response.setHeader("Content-Type", attachment.mimetype);
                 response.setHeader('Content-Disposition', `inline; filename="${attachment.name}"`);
-                (0, AttachmentCache_1.setAttachmentCache)(attachmentId, attachment);
+                constants_1.CACHE.set(attachmentId, attachment);
                 response.status(200).send(attachment.buffer);
             }
         }
@@ -134,7 +133,7 @@ function removeCourseAttachment(request, response) {
             const attachment = yield (0, CourseAttachmentsQueries_1.deleteCourseAttachment)(attachmentId);
             if (!attachment)
                 return response.status(404).send({ message: `Attachment not found.` });
-            (0, AttachmentCache_1.deleteAttachmentCache)(attachmentId);
+            constants_1.CACHE.delete(attachmentId);
             response.status(200).send({ message: `Attachment deleted.`, attachment });
         }
         catch (err) {
@@ -192,7 +191,7 @@ function getActivityAttachment(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { attachmentId } = request.params;
-            const attachmentOnCache = (0, AttachmentCache_1.getAttachmentCache)(attachmentId);
+            const attachmentOnCache = constants_1.CACHE.get(attachmentId);
             if (attachmentOnCache) {
                 response.setHeader("Content-Type", attachmentOnCache.mimetype);
                 response.setHeader('Content-Disposition', `inline; filename="${attachmentOnCache.name}"`);
@@ -206,7 +205,7 @@ function getActivityAttachment(request, response) {
                     return response.status(410).send({ message: `Attachment not found.` });
                 response.setHeader("Content-Type", attachment.mimetype);
                 response.setHeader('Content-Disposition', `inline; filename="${attachment.name}"`);
-                (0, AttachmentCache_1.setAttachmentCache)(attachmentId, attachment);
+                constants_1.CACHE.set(attachmentId, attachment);
                 response.status(200).send(attachment.buffer);
             }
         }
@@ -241,7 +240,7 @@ function removeActivityAttachment(request, response) {
             const attachment = yield (0, ActivitiesAttachmentsQueries_1.deleteActivityAttachment)(attachmentId);
             if (!attachment)
                 return response.status(404).send({ message: `Attachment not found.` });
-            (0, AttachmentCache_1.deleteAttachmentCache)(attachmentId);
+            constants_1.CACHE.delete(attachmentId);
             response.status(200).send({ message: `Attachment deleted.`, attachment });
         }
         catch (err) {
@@ -254,7 +253,7 @@ function getSubmissionAttachment(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { attachmentId } = request.params;
-            const attachmentOnCache = (0, AttachmentCache_1.getAttachmentCache)(attachmentId);
+            const attachmentOnCache = constants_1.CACHE.get(attachmentId);
             if (attachmentOnCache) {
                 response.setHeader("Content-Type", attachmentOnCache.mimetype);
                 response.setHeader('Content-Disposition', `inline; filename="${attachmentOnCache.name}"`);
@@ -268,7 +267,7 @@ function getSubmissionAttachment(request, response) {
                     return response.status(410).send({ message: `Attachment not found.` });
                 response.setHeader("Content-Type", attachment.mimetype);
                 response.setHeader('Content-Disposition', `inline; filename="${attachment.name}"`);
-                (0, AttachmentCache_1.setAttachmentCache)(attachmentId, attachment);
+                constants_1.CACHE.set(attachmentId, attachment);
                 response.status(200).send(attachment.buffer);
             }
         }
@@ -299,7 +298,7 @@ function removeSubmissionAttachment(request, response) {
             const attachment = yield (0, SubmissionAttachmentsQueries_1.deleteSubmissionAttachment)(attachmentId);
             if (!attachment)
                 return response.status(404).send({ message: `Attachment not found.` });
-            (0, AttachmentCache_1.deleteAttachmentCache)(attachmentId);
+            constants_1.CACHE.delete(attachmentId);
             response.status(200).send({ message: `Attachment deleted.`, attachment });
         }
         catch (err) {

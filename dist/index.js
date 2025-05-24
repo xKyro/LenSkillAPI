@@ -44,7 +44,6 @@ const profile_routes_1 = __importDefault(require("./routes/profile.routes"));
     app.use((0, morgan_1.default)("dev"));
     //Enrutamiento
     const API_V = "/api/v1";
-    const CDN_V = "/cdn/v1";
     //Enrutadores API
     app.use(`${API_V}/auth`, auth_routes_1.default);
     app.use(`${API_V}/users`, users_routes_1.default);
@@ -52,8 +51,8 @@ const profile_routes_1 = __importDefault(require("./routes/profile.routes"));
     app.use(`${API_V}/activities`, activities_routes_1.default);
     app.use(`${API_V}/submissions`, submissions_routes_1.default);
     app.use(`${API_V}/profile`, profile_routes_1.default);
-    //Enrutadores CDN local (No es recomendable hacerlo de esta forma - Tomen nota niños)
-    app.use(`${CDN_V}/attachments`, attachments_routes_1.default);
+    //Enrutadores de archivos local (No es recomendable hacerlo de esta forma - Tomen nota niños)
+    app.use(`${API_V}/attachments`, attachments_routes_1.default);
     //Iniciar la API
     app.listen(app.get("PORT"), (error) => {
         console.log("\x1b[2J\x1b[H");

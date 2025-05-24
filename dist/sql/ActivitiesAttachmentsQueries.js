@@ -132,7 +132,7 @@ function fetchActivityAttachments(activityId) {
         for (const data of result.rows) {
             const attachment = {
                 name: data.name,
-                url: `${process.env.API_URL}/cdn/v1/attachments/activities/${data.attachment_id}`
+                url: `${process.env.API_URL}/api/v1/attachments/activities/${data.attachment_id}`
             };
             attachmentUrls.push(attachment);
         }

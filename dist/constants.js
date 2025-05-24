@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BLACKLISTED_MIMETYPES = exports.MAX_ATTACHMENT_BUFFER_SIZE = exports.MAX_ATTACHMENT_UPLOAD_SIZE = exports.ACTIVITY_DEADLINE_WINDOW = exports.TOKEN_EXPIRATION_TIME = void 0;
+exports.CACHE = exports.BLACKLISTED_MIMETYPES = exports.MAX_ATTACHMENT_BUFFER_SIZE = exports.MAX_ATTACHMENT_UPLOAD_SIZE = exports.ACTIVITY_DEADLINE_WINDOW = exports.TOKEN_EXPIRATION_TIME = void 0;
+const AttachmentCache_1 = __importDefault(require("./cache/AttachmentCache"));
 exports.TOKEN_EXPIRATION_TIME = 30 * 24 * 60 * 60 * 1000;
 //D * H * M * S * MS
 exports.ACTIVITY_DEADLINE_WINDOW = 1 * 24 * 60 * 60 * 1000;
@@ -20,3 +24,7 @@ exports.BLACKLISTED_MIMETYPES = [
     'application/java-archive', // .jar
     'application/x-msinstaller'
 ];
+exports.CACHE = new AttachmentCache_1.default({
+    maxSize: 32,
+    timeLimit: 120 //Seconds
+});
