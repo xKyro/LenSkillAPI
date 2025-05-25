@@ -112,6 +112,14 @@ create table if not exists submission_attachment_data (
 	buffer bytea not null
 );
 
+-- REGISTRAR USUARIOS PRUEBA
+insert into users (user_id, first_name, last_name, email, password, role, created_at, last_login) values
+	('1', 'Estudiante', 'Prueba', 'estudiante@leanskill.com', '$2b$10$RZjC6FvKYGR3cmnTQr7qO.1rNy.8pRiM3Nk4eqghuIUBVx2y4mL3W', 'USER'::user_role, now(), now()),
+	('2', 'Profesor', 'Prueba', 'profesor@leanskill.com', '$2b$10$RZjC6FvKYGR3cmnTQr7qO.1rNy.8pRiM3Nk4eqghuIUBVx2y4mL3W', 'INSTRUCTOR'::user_role, now(), now()),
+	('3', 'Administrador', 'Prueba', 'administrador@leanskill.com', '$2b$10$RZjC6FvKYGR3cmnTQr7qO.1rNy.8pRiM3Nk4eqghuIUBVx2y4mL3W', 'ADMINISTRATOR'::user_role, now(), now());
+
+
+-- CONSULTAS
 select * from course_attachments a join course_attachment_data ad on ad.attachment_id = a.attachment_id where a.attachment_id = '196C1700CD0' order by ad.chunk_index asc;
 select * from course_attachment_data;
 select * from course_attachments;
@@ -126,6 +134,8 @@ delete * from course_attachments;
 
 select * from submission_attachments;
 select * from submissions;
+
+select a.*, (select count(*) from submissions s where s.activity_id = a.activity_id) as submission_count from activities a where activity_id = '8579868677898240';
 
 select * from users;
 select * from courses;

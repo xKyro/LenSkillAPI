@@ -19,10 +19,6 @@ class AttachmentCache {
         const value = __classPrivateFieldGet(this, _AttachmentCache_cache, "f").get(key);
         __classPrivateFieldGet(this, _AttachmentCache_cache, "f").delete(key);
         __classPrivateFieldGet(this, _AttachmentCache_cache, "f").set(key, value);
-        if (key in __classPrivateFieldGet(this, _AttachmentCache_dropQueue, "f")) {
-            const timeout = __classPrivateFieldGet(this, _AttachmentCache_dropQueue, "f")[key];
-            clearTimeout(timeout);
-        }
         __classPrivateFieldGet(this, _AttachmentCache_dropQueue, "f")[key] = __classPrivateFieldGet(this, _AttachmentCache_instances, "m", _AttachmentCache_timeout).call(this, key);
         return value;
     }
@@ -61,6 +57,10 @@ class AttachmentCache {
 }
 _AttachmentCache_timeLimit = new WeakMap(), _AttachmentCache_maxSize = new WeakMap(), _AttachmentCache_cache = new WeakMap(), _AttachmentCache_dropQueue = new WeakMap(), _AttachmentCache_instances = new WeakSet(), _AttachmentCache_timeout = function _AttachmentCache_timeout(key) {
     var _a;
+    if (key in __classPrivateFieldGet(this, _AttachmentCache_dropQueue, "f")) {
+        const timeout = __classPrivateFieldGet(this, _AttachmentCache_dropQueue, "f")[key];
+        clearTimeout(timeout);
+    }
     return setTimeout(() => {
         if (__classPrivateFieldGet(this, _AttachmentCache_cache, "f").has(key)) {
             delete __classPrivateFieldGet(this, _AttachmentCache_dropQueue, "f")[key];

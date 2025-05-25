@@ -248,7 +248,7 @@ function removeActivityAttachment(request, response) {
         }
     });
 }
-//#region Activities attachments
+//#region Submissions attachments
 function getSubmissionAttachment(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

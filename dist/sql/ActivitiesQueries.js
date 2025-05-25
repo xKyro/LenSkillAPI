@@ -19,6 +19,7 @@ exports.updateActivity = updateActivity;
 exports.deleteActivity = deleteActivity;
 const Database_1 = __importDefault(require("../schemas/Database"));
 const DateFormatter_1 = require("../tools/DateFormatter");
+const ActivitiesAttachmentsQueries_1 = require("./ActivitiesAttachmentsQueries");
 const CoursesQueries_1 = require("./CoursesQueries");
 function createActivity(activity) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -61,7 +62,8 @@ function fetchActivity(activityId, options) {
             description: data.description,
             created_at: (0, DateFormatter_1.formatToLocale)(data.created_at),
             deadline: (0, DateFormatter_1.formatToLocale)(data.deadline),
-            submissions: parseInt(data.submission_count)
+            submissions: parseInt(data.submission_count),
+            attachments: yield (0, ActivitiesAttachmentsQueries_1.fetchActivityAttachments)(data.activity_id)
         };
         if (options === null || options === void 0 ? void 0 : options.getCourse) {
             const course = yield (0, CoursesQueries_1.fetchCourse)(data.course_id);
