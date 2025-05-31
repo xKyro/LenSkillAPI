@@ -16,6 +16,7 @@ exports.createSubmission = createSubmission;
 exports.fetchSubmissions = fetchSubmissions;
 exports.fetchSubmission = fetchSubmission;
 exports.updateSubmision = updateSubmision;
+exports.updateSubmissionScore = updateSubmissionScore;
 exports.deleteSubmission = deleteSubmission;
 const Database_1 = __importDefault(require("../schemas/Database"));
 const DateFormatter_1 = require("../tools/DateFormatter");
@@ -78,6 +79,23 @@ function updateSubmision(submissionId, options) {
         const valuesData = Object.entries(options).map(value => { return { name: value[0], value: value[1] }; });
         const setClause = valuesData.map((val, i) => `${val.name} = $${i + 1}`);
         const result = yield Database_1.default.query(`update submissions set ${setClause} where submission_id = $${setClause.length + 1} returning *`, [...valuesData.filter(val => val.value).map(val => val.value), submissionId]);
+        if (!result.rows[0])
+            return null;
+        const data = result.rows[0];
+        const submissionDTO = {
+            id: data.submission_id,
+            user_id: data.user_id,
+            activity_id: data.activity_id,
+            comment: data.comment,
+            score: data.score,
+            created_at: (0, DateFormatter_1.formatToLocale)(data.created_at)
+        };
+        return submissionDTO;
+    });
+}
+function updateSubmissionScore(submissionId, score) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield Database_1.default.query(`update submissions set score = $1 where submission_id = $2 returning *`, [score, submissionId]);
         if (!result.rows[0])
             return null;
         const data = result.rows[0];

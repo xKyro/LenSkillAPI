@@ -17,10 +17,6 @@ const User_1 = require("../schemas/User");
 function getUsers(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const me = request.user;
-            const [accessGranted, requiredRoles] = (0, Access_1.hasAccess)(me, [User_1.UserRole.ADMINISTRATOR]);
-            if (!accessGranted)
-                return response.status(401).send({ message: `Missing access. Only users with ${requiredRoles.join(", ")} can access.` });
             const users = yield (0, UserQueries_1.fetchUsers)();
             response.status(200).send({ message: "Users fetched.", users });
         }

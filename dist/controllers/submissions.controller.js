@@ -16,12 +16,15 @@ exports.registerSubmission = registerSubmission;
 exports.getSubmission = getSubmission;
 exports.putSubmission = putSubmission;
 exports.removeSubmission = removeSubmission;
+exports.putSubmissionScore = putSubmissionScore;
 const Submission_1 = __importDefault(require("../schemas/Submission"));
 const SubmissionsQueries_1 = require("../sql/SubmissionsQueries");
 const SubmissionAttachment_1 = __importDefault(require("../schemas/SubmissionAttachment"));
 const constants_1 = require("../constants");
 const Attachments_1 = require("../tools/Attachments");
 const SubmissionAttachmentsQueries_1 = require("../sql/SubmissionAttachmentsQueries");
+const Access_1 = require("../tools/Access");
+const User_1 = require("../schemas/User");
 function registerSubmission(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -101,6 +104,32 @@ function removeSubmission(request, response) {
             if (!submission)
                 return response.status(400).send({ message: `Submission not found.` });
             response.status(200).send({ message: `Submission deleted.`, submission });
+        }
+        catch (err) {
+            response.status(500).send({ message: "An error ocurred on our end.", error: err.message });
+        }
+    });
+}
+// Calificar entrega
+function putSubmissionScore(request, response) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const me = request.user;
+            const { submissionId } = request.params;
+            const score = parseInt(request.body.score) || null;
+            if (!submissionId)
+                return response.status(400).send({ message: `Submission ID not provided.` });
+            if (!score)
+                return response.status(400).send({ message: `Score not provided or is not a number.` });
+            if (score < 0 || score > 5)
+                return response.status(400).send({ message: `Invalid score. Must be between 0 and 5` });
+            const [accessGranted, requiredRoles] = (0, Access_1.hasAccess)(me, [User_1.UserRole.INSTRUCTOR, User_1.UserRole.ADMINISTRATOR]);
+            if (!accessGranted)
+                return response.status(401).send({ message: `Missing access. Only users with ${requiredRoles.join(", ")} can access.` });
+            const submission = yield (0, SubmissionsQueries_1.updateSubmissionScore)(submissionId, score);
+            if (!submission)
+                return response.status(400).send({ message: `Submission not found.` });
+            response.status(200).send({ message: `Submission graded.`, submission });
         }
         catch (err) {
             response.status(500).send({ message: "An error ocurred on our end.", error: err.message });
